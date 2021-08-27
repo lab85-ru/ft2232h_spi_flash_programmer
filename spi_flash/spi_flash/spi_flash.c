@@ -41,7 +41,7 @@ const char PRINT_HELP[] = {
 "- Prog for chip FTx232x. Read/Write file to SPI flash.----------------------\n\r"
 "    Parameters:\n\r"
 " --chiplist           - print all chips supported.\n\r"
-" --channel            - FT2232H channel, 0 or 1.\n\r"
+" --channel <channel>  - FT2232H channel, 0 or 1.\n\r"
 " --chip   <chipname>  - set \"name\"chip.\n\r"
 " --offset <offset>    - set start address(format hex = 0x00000000 or dec).\n\r"
 " --size   <len>       - set length(format hex = 0x00000000 or dec).\n\r"

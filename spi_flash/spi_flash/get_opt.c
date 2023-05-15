@@ -55,7 +55,10 @@ int get_opt(const int argc, char** argv, param_opt_st *param_opt)
 				//printf("%s\n\r", argv[i]);
 				param_opt->offset = 0;
 				cn = conv_to_uint32((const char*)argv[i], (uint32_t*)&param_opt->offset);
-				if (cn <= 0) return -1;
+				if (cn <= 0) {
+					printf("ERROR: --offset param.\n");
+					return -1;
+				}
 				i++;
 				res++;
 			}else return -1;
@@ -107,7 +110,10 @@ int get_opt(const int argc, char** argv, param_opt_st *param_opt)
 				//printf("%s\n\r", argv[i]);
 				param_opt->size = 0;
 				cn = conv_to_uint32((const char*)argv[i], (uint32_t*)&param_opt->size);
-				if (cn <= 0) return -1;
+				if (cn <= 0) {
+					printf("ERROR: --size param.\n");
+					return -1;
+				}
 				i++;
 				res++;
 			}else return -1;
@@ -129,7 +135,10 @@ int get_opt(const int argc, char** argv, param_opt_st *param_opt)
 				i++;
 				//printf("%s\n\r", argv[i]);
 				cn = conv_to_uint32((const char*)argv[i], (uint32_t*)&param_opt->clk);
-				if (cn <= 0) return -1;
+				if (cn <= 0) {
+					printf("ERROR: --clk param\n");
+					return -1;
+				}
 				if (param_opt->clk == 0){
 					printf("ERROR: set clk = %d\n\r", param_opt->clk);
 					return -1;
@@ -146,6 +155,10 @@ int get_opt(const int argc, char** argv, param_opt_st *param_opt)
 				i++;
 				//printf("%s\n\r", argv[i]);
 				cn = conv_to_uint32((const char*)argv[i], (uint32_t*)&param_opt->channel);
+				if (cn <= 0) {
+					printf("ERROR: --channel param\n");
+					return -1;
+				}
 				i++;
 				res++;
 			}else return -1;

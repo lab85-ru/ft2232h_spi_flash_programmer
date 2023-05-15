@@ -63,7 +63,7 @@ static int get_status(FT_HANDLE ftHandle );
 
 
 const struct mem_chip_st chip_s25fl512s = {
-    "s25fl512s",  // name
+    "S25FL512S",  // name
 	64*1024*1024, // density(bytes)
 	256*1024,     // sector_erase_size(bytes)
 	512,          // prog_buf_size(bytes)
@@ -117,8 +117,8 @@ static FT_STATUS id_read( FT_HANDLE ftHandle )
 	status = p_SPI_Read(ftHandle, buf, sizeToTransfer, &sizeTransfered, SPI_TRANSFER_OPTIONS_SIZE_IN_BYTES | SPI_TRANSFER_OPTIONS_CHIPSELECT_DISABLE);
 	APP_CHECK_STATUS(status);
 
-	printf("Manufacture ID = 0x%x\n\r", buf[0]);
-	printf("Device ID      = 0x%x\n\r", buf[1]);
+	printf("Manufacture ID = 0x%02X\n\r", buf[0]);
+	printf("Device ID      = 0x%02X\n\r", buf[1]);
     printf("Chip S25FL512S ");
 	if (MANUFACTURE_ID == buf[0] && DEVICE_ID == buf[1]){
         printf(" found.\r\n");

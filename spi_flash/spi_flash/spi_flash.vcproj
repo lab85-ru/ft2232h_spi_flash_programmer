@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="windows-1251"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9,00"
+	Version="9.00"
 	Name="spi_flash"
 	ProjectGUID="{9738C543-CC5F-45B9-9160-7CE629D6E0F3}"
 	RootNamespace="spi_flash"
@@ -187,6 +187,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\m25p16.c"
+				>
+			</File>
+			<File
 				RelativePath=".\m25p64.c"
 				>
 			</File>
@@ -204,6 +208,10 @@
 			</File>
 			<File
 				RelativePath=".\spi_flash.c"
+				>
+			</File>
+			<File
+				RelativePath=".\w25q32.c"
 				>
 			</File>
 		</Filter>
@@ -225,6 +233,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\m25p16.h"
+				>
+			</File>
+			<File
 				RelativePath=".\m25p64.h"
 				>
 			</File>
@@ -242,6 +254,10 @@
 			</File>
 			<File
 				RelativePath=".\targetver.h"
+				>
+			</File>
+			<File
+				RelativePath=".\w25q32.h"
 				>
 			</File>
 		</Filter>

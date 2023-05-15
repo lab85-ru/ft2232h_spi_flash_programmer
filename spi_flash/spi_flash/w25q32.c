@@ -45,7 +45,7 @@ dlsym\n",__LINE__);}}
 #endif
 
 
-extern const struct mem_chip_st chip_m25p128;
+extern const struct mem_chip_st chip_w25q32;
 // function ===================================================================
 static FT_STATUS id_read( FT_HANDLE ftHandle );
 static FT_STATUS read(FT_HANDLE ftHandle, const uint32 adr_start, uint8 *buf, const uint32 len, uint32 * sizeTransfered);
@@ -54,12 +54,12 @@ static FT_STATUS erase( FT_HANDLE ftHandle, const uint32 adr_sec);
 static FT_STATUS wren(FT_HANDLE ftHandle );
 static FT_STATUS wrdi(FT_HANDLE ftHandle );
 static int get_status(FT_HANDLE ftHandle );
-//=============================================================================
+//=================================== ==========================================
 
-const struct mem_chip_st chip_m25p128 = {
-    "M25P128",    // name
-	16*1024*1024, // density(bytes)
-	256*1024,     // sector_erase_size(bytes)
+const struct mem_chip_st chip_w25q32 = {
+    "W25Q32",     // name
+	4*1024*1024,  // density(bytes)
+	4*1024,       // sector_erase_size(bytes)
 	256,          // prog_buf_size(bytes)
 	id_read,      //(*id_read)
 	read,         //(*read)
@@ -74,11 +74,13 @@ const struct mem_chip_st chip_m25p128 = {
 //=============================================================================
 // Read ID from chip
 //=============================================================================
-#define CMD_RDID        (0x9f)
+#define CMD_JEDEC_ID    (0x9f) // Read EF 40 16
+#define CMD_MANUFACTURED_DEVICE_ID (0x90)
 
-#define MANUFACTURE_ID  (0x20)
-#define MEM_TYPE_ID     (0x20)
-#define MEM_CAPACITY_ID (0x18)
+#define W25Q32BV_ID     (0x15) // W25Q32BV
+#define MANUFACTURE_ID  (0xEF) // Winbond Serial Flash
+#define MEM_TYPE_ID     (0x40)
+#define MEM_CAPACITY_ID (0x16)
 
 static FT_STATUS id_read( FT_HANDLE ftHandle )
 {
@@ -87,7 +89,7 @@ static FT_STATUS id_read( FT_HANDLE ftHandle )
 	FT_STATUS status;
 	uint8 buf[ 5 ];
 
-	printf("M25P128 ID READ.\r\n");
+	printf("W25Q32 ID READ.\r\n");
 
 	p_SPI_Read = (pfunc_SPI_Read)GET_FUN_POINTER(h_libMPSSE, "SPI_Read");
 	CHECK_NULL(p_SPI_Read);
@@ -95,12 +97,12 @@ static FT_STATUS id_read( FT_HANDLE ftHandle )
 	CHECK_NULL(p_SPI_Write);
 
 
-	buf[ 0 ] = CMD_RDID;
+	buf[ 0 ] = CMD_JEDEC_ID;
 	buf[ 1 ] = 0;
 	buf[ 2 ] = 0;
 	buf[ 3 ] = 0;
 
-	// send CMD RDID
+	// send CMD JEDEC ID
 	sizeToTransfer = 1;
 	sizeTransfered = 0;
 	status = p_SPI_Write(ftHandle, buf, sizeToTransfer, &sizeTransfered, SPI_TRANSFER_OPTIONS_SIZE_IN_BYTES | SPI_TRANSFER_OPTIONS_CHIPSELECT_ENABLE);
@@ -115,7 +117,7 @@ static FT_STATUS id_read( FT_HANDLE ftHandle )
 	printf("Manufacture ID  = 0x%02X\n\r", buf[0]);
 	printf("Mem type ID     = 0x%02X\n\r", buf[1]);
     printf("Mem capacity ID = 0x%02X\n\r", buf[2]);
-    printf("Chip M25P128 ");
+    printf("Chip W25Q32 ");
 	if (MANUFACTURE_ID == buf[0] && MEM_TYPE_ID == buf[1] && MEM_CAPACITY_ID == buf[2]){
         printf("found.\r\n");
 		return FT_OK;
@@ -173,7 +175,7 @@ static FT_STATUS write(FT_HANDLE ftHandle, const uint32 adr_start, uint8 *buf, c
 	FT_STATUS status;
 	uint8 cmd[ 5 ];
 
-	if ((adr_start & (chip_m25p128.prog_buf_size - 1)) != 0){
+	if ((adr_start & (chip_w25q32.prog_buf_size - 1)) != 0){
 		printf("ERROR: (write) Set start adr != n*prog_buf_size.\n\r");
 		return FT_INVALID_PARAMETER;
 	}
@@ -205,19 +207,13 @@ static FT_STATUS write(FT_HANDLE ftHandle, const uint32 adr_start, uint8 *buf, c
 	}
 	*sizeTransfered = n;
 
-#ifdef _WIN32
-	Sleep(2);
-#else
-	usleep(2000);
-#endif
-
 	return status;
 }
 
 //=============================================================================
 // Erase sector (chip)
 //=============================================================================
-#define CMD_SE       (0xd8)
+#define CMD_SE       (0x20)//(0xd8)
 static FT_STATUS erase( FT_HANDLE ftHandle, const uint32 adr_sec)
 {
 	uint32 sizeToTransfer = 0;
@@ -228,7 +224,7 @@ static FT_STATUS erase( FT_HANDLE ftHandle, const uint32 adr_sec)
 	p_SPI_Write = (pfunc_SPI_Write)GET_FUN_POINTER(h_libMPSSE, "SPI_Write");
 	CHECK_NULL(p_SPI_Write);
 
-	if (adr_sec % chip_m25p128.sector_erase_size){ // adr ne virovene na granicu sectora !!!
+	if (adr_sec % chip_w25q32.sector_erase_size){ // adr ne virovene na granicu sectora !!!
 		printf("ERROR: set addres sector error != n * sec_erase_size.\n\r");
 		return FT_INVALID_PARAMETER;
 	}
@@ -244,11 +240,13 @@ static FT_STATUS erase( FT_HANDLE ftHandle, const uint32 adr_sec)
 	status = p_SPI_Write(ftHandle, cmd, sizeToTransfer, &sizeTransfered, SPI_TRANSFER_OPTIONS_SIZE_IN_BYTES | SPI_TRANSFER_OPTIONS_CHIPSELECT_ENABLE | SPI_TRANSFER_OPTIONS_CHIPSELECT_DISABLE);
 	APP_CHECK_STATUS(status);
 
+/*
 #ifdef _WIN32
-	Sleep(2000);
+	Sleep(45); // Sector Erase Time (4KB) tSE nom=45 max=400 ms
 #else
-	sleep(2);
+	usleep(45000);
 #endif
+*/
 
 	return status;
 }
@@ -274,12 +272,6 @@ static FT_STATUS wren( FT_HANDLE ftHandle )
 	sizeTransfered = 0;
 	status = p_SPI_Write(ftHandle, cmd, sizeToTransfer, &sizeTransfered, SPI_TRANSFER_OPTIONS_SIZE_IN_BYTES | SPI_TRANSFER_OPTIONS_CHIPSELECT_ENABLE | SPI_TRANSFER_OPTIONS_CHIPSELECT_DISABLE);
 	APP_CHECK_STATUS(status);
-
-#ifdef _WIN32
-	Sleep(2);
-#else
-	usleep(2000);
-#endif
 
 	return status;
 }

@@ -50,7 +50,7 @@ static int get_status(FT_HANDLE ftHandle );
 //=============================================================================
 
 const struct mem_chip_st chip_m25p64 = {
-    "m25p64",     // name
+    "M25P64",     // name
 	8*1024*1024,  // density(bytes)
 	64*1024,      // sector_erase_size(bytes)
 	256,          // prog_buf_size(bytes)
@@ -105,9 +105,9 @@ static FT_STATUS id_read( FT_HANDLE ftHandle )
 	status = p_SPI_Read(ftHandle, buf, sizeToTransfer, &sizeTransfered, SPI_TRANSFER_OPTIONS_SIZE_IN_BYTES | SPI_TRANSFER_OPTIONS_CHIPSELECT_DISABLE);
 	APP_CHECK_STATUS(status);
 
-	printf("Manufacture ID  = 0x%x\n\r", buf[0]);
-	printf("Mem type ID     = 0x%x\n\r", buf[1]);
-    printf("Mem capacity ID = 0x%x\n\r", buf[2]);
+	printf("Manufacture ID  = 0x%02X\n\r", buf[0]);
+	printf("Mem type ID     = 0x%02X\n\r", buf[1]);
+    printf("Mem capacity ID = 0x%02X\n\r", buf[2]);
     printf("Chip M25P64 ");
 	if (MANUFACTURE_ID == buf[0] && MEM_TYPE_ID == buf[1] && MEM_CAPACITY_ID == buf[2]){
         printf("found.\r\n");

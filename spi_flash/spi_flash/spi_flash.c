@@ -218,13 +218,13 @@ int main(int argc, char* argv[])
 		while(strcmp(param_opt.chip_name, chip_array[ i ]->name) != 0){
             i++;
 			if (i == CHIP_QUANTITY){
-		        printf("ERROR: Chip[  %s  ] not found.\n\r", param_opt.chip_name);
+		        printf("ERROR: Chip name %s not found.\n\r", param_opt.chip_name);
 		        return 1;
 			}
 		}
 		param_opt.chip_n = i;
 	} else {
-		printf("ERROR: Chip[  %s  ] not found.\n\r", param_opt.chip_name);
+		printf("ERROR: Chip name %s not found.\n\r", param_opt.chip_name);
 		return 1;
 	}
 

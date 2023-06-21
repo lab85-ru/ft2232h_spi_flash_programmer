@@ -14,7 +14,7 @@ int conv_char_to_byte(const uint8_t sin, uint8_t * bout)
         return 0;
     } 
     
-    if (sin >= 'A' && sin <= 'Z'){
+    if (sin >= 'A' && sin <= 'F'){
         *bout = (uint8_t)sin - 0x37;
         return 0;
     } 

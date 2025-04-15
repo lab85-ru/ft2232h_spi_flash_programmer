@@ -358,13 +358,8 @@ the shared library folder(/usr/lib or /usr/lib64)\n");
 	if (param_opt.op == OP_ER) printf("ERASE.\n\r");
 	if (param_opt.op == OP_CMP) printf("COMPARE.\n\r");
 	printf(" OFFSET : %d ( 0x%x )\n\r", param_opt.offset, param_opt.offset);
-//    if (param_opt.op == OP_CMP || param_opt.op == OP_WR) {
-//	    printf(" FSIZE  : %d bytes\n\r", (long long)stat_buf.st_size);
-//    } else {
-	    printf(" SIZE   : %d ( 0x%x )\n\r", param_opt.size, param_opt.size);
-//    }
-	printf(" FILE   : %s\n\r", param_opt.file_name);
-    printf(" FSIZE  : %d bytes\n\r", (long long)stat_buf.st_size);
+    printf(" SIZE   : %d ( 0x%x )\n\r", param_opt.size, param_opt.size);
+	printf(" FILE   : %s  %lld bytes\n\r", param_opt.file_name, (long long)stat_buf.st_size);
     printf(PRINT_TIRE);
 
 	status = p_SPI_GetChannelInfo(param_opt.channel, &devList);

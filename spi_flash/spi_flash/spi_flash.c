@@ -55,7 +55,7 @@ const char PRINT_HELP[] = {
 
 const char PRINT_TIRE[] = {"================================================================================\n\r"};
 const char PRINT_PROG_NAME[] = {" FTx232x SPI FLASH MEMORY PROGRAMMATOR\n\r"};
-const char PRINT_VERSION[] = {" Ver 1.2 2018. Sviridov Georgy. sgot@inbox.ru\n\r"};
+const char PRINT_VERSION[] = {" Ver 1.3 2025. Sviridov Georgy. sgot@inbox.ru\n\r"};
 
 
 param_opt_st param_opt;
@@ -342,6 +342,11 @@ the shared library folder(/usr/lib or /usr/lib64)\n");
 
 	if(channels == 0) return 1;
 
+	if (stat(param_opt.file_name, &stat_buf) == -1){
+		printf("ERROR: fstat return error !\n\r");
+		return 1;
+	}
+
     printf(PRINT_TIRE);
 	printf(" CHIP   : %s\n\r", chip_array[ param_opt.chip_n ]->name);
 	printf(" CHANNEL: %d\n\r", param_opt.channel);
@@ -353,7 +358,11 @@ the shared library folder(/usr/lib or /usr/lib64)\n");
 	if (param_opt.op == OP_ER) printf("ERASE.\n\r");
 	if (param_opt.op == OP_CMP) printf("COMPARE.\n\r");
 	printf(" OFFSET : %d ( 0x%x )\n\r", param_opt.offset, param_opt.offset);
-	printf(" SIZE   : %d ( 0x%x )\n\r", param_opt.size, param_opt.size);
+    if (param_opt.op == OP_CMP) {
+	    printf(" FSIZE  : %d bytes\n\r", (long long)stat_buf.st_size);
+    } else {
+	    printf(" SIZE   : %d ( 0x%x )\n\r", param_opt.size, param_opt.size);
+    }
 	printf(" FILE   : %s\n\r", param_opt.file_name);
     printf(PRINT_TIRE);
 

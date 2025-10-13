@@ -15,6 +15,7 @@ int get_opt(const int argc, char** argv, param_opt_st *param_opt)
 {
 	int res = 0; //result get_opt
 	int cn = 0;
+	int i = 0;
 	
 	//printf("argc=%d\n\r", argc);
 
@@ -22,7 +23,7 @@ int get_opt(const int argc, char** argv, param_opt_st *param_opt)
 	if (argc == 1) return 0;
 
 	// start from i=1, t.k. =0 sama programma
-    int i=1;
+    i = 1;
     while(i != argc){
 		
 		//printf("string = %s\n\r", argv[i]);

@@ -150,6 +150,7 @@ static FT_HANDLE ftHandle;
 //=============================================================================
 int main(int argc, char* argv[])
 {
+	size_t i = 0;
 	struct stat stat_buf;
 	FILE * fi = 0;
 	int res = 0;
@@ -203,7 +204,7 @@ int main(int argc, char* argv[])
 	// print spisol mikroshem
 	if (param_opt.chip_list != 0){
 		printf("\n\r--- CHIP LIST ---\n\r");
-	    for(int i=0; i!=CHIP_QUANTITY; i++){
+	    for(i=0; i!=CHIP_QUANTITY; i++){
 			printf("CHIP: %s\n\r", chip_array[ i ]->name);
 	    }
         printf("\n\r");
@@ -290,7 +291,7 @@ int main(int argc, char* argv[])
 #ifdef _WIN32
 	#ifdef _MSC_VER
 		//h_libMPSSE = LoadLibrary(L"libMPSSE.dll");
-		h_libMPSSE = LoadLibrary("libMPSSE.dll");
+		h_libMPSSE = LoadLibrary(L"libMPSSE.dll");
 	#else
 		h_libMPSSE = LoadLibrary("libMPSSE.dll");
 	#endif
@@ -626,7 +627,7 @@ the shared library folder(/usr/lib or /usr/lib64)\n");
 		printf(" COMPARE.\n\r");
 		printf(PRINT_TIRE);
 
-		for (size_t i=0; i<pos; i++){
+		for (i=0; i<pos; i++){
 			if (mem[i] != mem_cmp[i]){
                 #ifdef _WIN32
 				printf("COMPARE ERROR: ADDRES( 0x%x )   BUF_FILE( 0x%x ) <> BUF_FLASH( 0x%x ).\n\r", i, mem[i], mem_cmp[i]);

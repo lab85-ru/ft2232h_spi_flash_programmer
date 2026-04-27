@@ -55,7 +55,7 @@ const char PRINT_HELP[] = {
 
 const char PRINT_TIRE[] = {"================================================================================\n\r"};
 const char PRINT_PROG_NAME[] = {" FTx232x SPI FLASH MEMORY PROGRAMMATOR\n\r"};
-const char PRINT_VERSION[] = {" Ver 1.4 2025. Sviridov Georgy. sgot@inbox.ru\n\r"};
+const char PRINT_VERSION[] = {" Ver 1.5 2025. Sviridov Georgy. sgot@inbox.ru\n\r"};
 
 
 param_opt_st param_opt;

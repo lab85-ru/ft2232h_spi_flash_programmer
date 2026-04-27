@@ -211,6 +211,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\st_m25p80.c"
+				>
+			</File>
+			<File
 				RelativePath=".\w25q32.c"
 				>
 			</File>
@@ -254,6 +258,10 @@
 			</File>
 			<File
 				RelativePath=".\s25fl512s.h"
+				>
+			</File>
+			<File
+				RelativePath=".\st_m25p80.h"
 				>
 			</File>
 			<File

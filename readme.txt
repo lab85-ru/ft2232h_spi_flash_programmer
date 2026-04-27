@@ -8,3 +8,5 @@ ADD chip:
     M25P128
     S25FL512S
     W25Q32
+    W25Q64FV
+    ST M25P80

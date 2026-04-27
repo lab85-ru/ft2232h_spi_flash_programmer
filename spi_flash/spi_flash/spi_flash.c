@@ -291,7 +291,7 @@ int main(int argc, char* argv[])
 #ifdef _WIN32
 	#ifdef _MSC_VER
 		//h_libMPSSE = LoadLibrary(L"libMPSSE.dll");
-		h_libMPSSE = LoadLibrary(L"libMPSSE.dll");
+		h_libMPSSE = LoadLibrary("libMPSSE.dll");
 	#else
 		h_libMPSSE = LoadLibrary("libMPSSE.dll");
 	#endif

@@ -2,7 +2,7 @@
 FT2232H Universal SPI FLASH programmer.
 
 FT2232H cmd line universal SPI flash programmer.
-For Windows(7 64) & linux(debian8 64)
+For Windows(7 64) & linux(debian8-13 64)
 
 ADD chip:
 

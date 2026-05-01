@@ -4,9 +4,7 @@
 #include "ftd2xx.h"
 #include "libMPSSE_spi.h"
 
-#ifdef _WIN32
-
-#else
+#ifdef __linux
 #include <unistd.h>
 #endif
 
@@ -47,27 +45,27 @@ dlsym\n",__LINE__);}}
 
 extern const struct mem_chip_st chip_m25p128;
 // function ===================================================================
-static FT_STATUS id_read( FT_HANDLE ftHandle );
-static FT_STATUS read(FT_HANDLE ftHandle, const uint32 adr_start, uint8 *buf, const uint32 len, uint32 * sizeTransfered);
-static FT_STATUS write(FT_HANDLE ftHandle, const uint32 adr_start, uint8 *buf, const uint32 prog_buf_size, uint32 * sizeTransfered);
-static FT_STATUS erase( FT_HANDLE ftHandle, const uint32 adr_sec);
-static FT_STATUS wren(FT_HANDLE ftHandle );
-static FT_STATUS wrdi(FT_HANDLE ftHandle );
-static int get_status(FT_HANDLE ftHandle );
+static FT_STATUS m_id_read( FT_HANDLE ftHandle );
+static FT_STATUS m_read(FT_HANDLE ftHandle, const uint32 adr_start, uint8 *buf, const uint32 len, uint32 * sizeTransfered);
+static FT_STATUS m_write(FT_HANDLE ftHandle, const uint32 adr_start, uint8 *buf, const uint32 prog_buf_size, uint32 * sizeTransfered);
+static FT_STATUS m_erase( FT_HANDLE ftHandle, const uint32 adr_sec);
+static FT_STATUS m_wren(FT_HANDLE ftHandle );
+static FT_STATUS m_wrdi(FT_HANDLE ftHandle );
+static int m_get_status(FT_HANDLE ftHandle );
 //=============================================================================
 
 const struct mem_chip_st chip_m25p128 = {
-    "M25P128",    // name
+	"M25P128",    // name
 	16*1024*1024, // density(bytes)
 	256*1024,     // sector_erase_size(bytes)
 	256,          // prog_buf_size(bytes)
-	id_read,      //(*id_read)
-	read,         //(*read)
-	write,        //(*write)
-	erase,        //(*erase)
-	wren,         //(*wr_en)
-	wrdi,         //(*wr_dis)
-	get_status    //(*get_status)
+	m_id_read,    // (*id_read)
+	m_read,       // (*read)
+	m_write,      // (*write)
+	m_erase,      // (*erase)
+	m_wren,       // (*wr_en)
+	m_wrdi,       // (*wr_dis)
+	m_get_status  // (*get_status)
 
 };
 
@@ -80,7 +78,7 @@ const struct mem_chip_st chip_m25p128 = {
 #define MEM_TYPE_ID     (0x20)
 #define MEM_CAPACITY_ID (0x18)
 
-static FT_STATUS id_read( FT_HANDLE ftHandle )
+static FT_STATUS m_id_read( FT_HANDLE ftHandle )
 {
 	uint32 sizeToTransfer = 0;
 	uint32 sizeTransfered;
@@ -131,7 +129,7 @@ static FT_STATUS id_read( FT_HANDLE ftHandle )
 #define READ_LEN        (128) // kolichestvo byte na chetie dla 1 operacii SPI_read
 //#define READ_LEN        (512) // kolichestvo byte na chetie dla 1 operacii SPI_read
 //#define READ_LEN        (8192) // kolichestvo byte na chetie dla 1 operacii SPI_read
-static FT_STATUS read(FT_HANDLE ftHandle, const uint32 adr_start, uint8 *buf, const uint32 len, uint32 * sizeTransfered)
+static FT_STATUS m_read(FT_HANDLE ftHandle, const uint32 adr_start, uint8 *buf, const uint32 len, uint32 * sizeTransfered)
 {
 	uint32 sizeToTransfer = 0;
 	uint32 size_Transfered;
@@ -166,7 +164,7 @@ static FT_STATUS read(FT_HANDLE ftHandle, const uint32 adr_start, uint8 *buf, co
 // adr_start kraten -> prog_buf_size
 //=============================================================================
 #define CMD_PP       (0x02)
-static FT_STATUS write(FT_HANDLE ftHandle, const uint32 adr_start, uint8 *buf, const uint32 size_for_write, uint32 * sizeTransfered)
+static FT_STATUS m_write(FT_HANDLE ftHandle, const uint32 adr_start, uint8 *buf, const uint32 size_for_write, uint32 * sizeTransfered)
 {
 	uint32 sizeToTransfer = 0;
 	uint32 n = 0;
@@ -205,12 +203,13 @@ static FT_STATUS write(FT_HANDLE ftHandle, const uint32 adr_start, uint8 *buf, c
 	}
 	*sizeTransfered = n;
 
+/*
 #ifdef _WIN32
 	Sleep(2);
 #else
 	usleep(2000);
 #endif
-
+*/
 	return status;
 }
 
@@ -218,7 +217,7 @@ static FT_STATUS write(FT_HANDLE ftHandle, const uint32 adr_start, uint8 *buf, c
 // Erase sector (chip)
 //=============================================================================
 #define CMD_SE       (0xd8)
-static FT_STATUS erase( FT_HANDLE ftHandle, const uint32 adr_sec)
+static FT_STATUS m_erase( FT_HANDLE ftHandle, const uint32 adr_sec)
 {
 	uint32 sizeToTransfer = 0;
 	uint32 sizeTransfered;
@@ -257,7 +256,7 @@ static FT_STATUS erase( FT_HANDLE ftHandle, const uint32 adr_sec)
 // Write_enable (chip)
 //=============================================================================
 #define CMD_WREN       (0x06)
-static FT_STATUS wren( FT_HANDLE ftHandle )
+static FT_STATUS m_wren( FT_HANDLE ftHandle )
 {
 	uint32 sizeToTransfer = 0;
 	uint32 sizeTransfered;
@@ -274,13 +273,13 @@ static FT_STATUS wren( FT_HANDLE ftHandle )
 	sizeTransfered = 0;
 	status = p_SPI_Write(ftHandle, cmd, sizeToTransfer, &sizeTransfered, SPI_TRANSFER_OPTIONS_SIZE_IN_BYTES | SPI_TRANSFER_OPTIONS_CHIPSELECT_ENABLE | SPI_TRANSFER_OPTIONS_CHIPSELECT_DISABLE);
 	APP_CHECK_STATUS(status);
-
+/*
 #ifdef _WIN32
 	Sleep(2);
 #else
 	usleep(2000);
 #endif
-
+*/
 	return status;
 }
 
@@ -288,7 +287,7 @@ static FT_STATUS wren( FT_HANDLE ftHandle )
 // Write_disable (chip)
 //=============================================================================
 #define CMD_WRDI       (0x04)
-static FT_STATUS wrdi( FT_HANDLE ftHandle )
+static FT_STATUS m_wrdi( FT_HANDLE ftHandle )
 {
 	uint32 sizeToTransfer = 0;
 	uint32 sizeTransfered;
@@ -318,7 +317,7 @@ static FT_STATUS wrdi( FT_HANDLE ftHandle )
 //=============================================================================
 #define CMD_RDSR       (0x05)
 #define FLAG_WIP       (1<<0)
-static int get_status(FT_HANDLE ftHandle )
+static int m_get_status(FT_HANDLE ftHandle )
 {
 	uint32 sizeToTransfer = 0;
 	uint32 sizeTransfered;
